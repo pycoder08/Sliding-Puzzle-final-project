@@ -219,11 +219,9 @@ class Board:  # creates the class 'Board'
                                 self.tiles_grid[row][column], self.tiles_grid[row][column - 1] = self.tiles_grid[row][column - 1], self.tiles_grid[row][column]
 
                             elif row + 1 < self.board_size and self.tiles_grid[row + 1][column] == 0: # Down
-                                print("down")
                                 self.tiles_grid[row][column], self.tiles_grid[row + 1][column] = self.tiles_grid[row + 1][column], self.tiles_grid[row][column]
 
-                            elif row - 1 >= 0 and row - 1 <= self.board_size and self.tiles_grid[row - 1][column] == 0: # Up
-                                print("up")
+                            elif row - 1 >= 0 and row - 1 <= self.board_size and self.tiles_grid[row - 1][column]
                                 self.tiles_grid[row][column], self.tiles_grid[row - 1][column] = self.tiles_grid[row - 1][column], self.tiles_grid[row][column]
                             self.draw_tiles()
 
