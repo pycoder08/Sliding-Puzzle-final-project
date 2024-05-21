@@ -1,3 +1,11 @@
+'''Resources used:
+https://www.pygame.org/docs/
+https://www.instructables.com/Making-Slide-Puzzle-With-Python/
+https://www.youtube.com/watch?v=DVNxN7Imr2s&list=PLOcNsDskpOqpKhkN6tLId128o0vFWWauV
+https://en.wikipedia.org/wiki/Parity_(physics)
+https://puzzling.stackexchange.com/questions/118080/possible-parity-for-sliding-puzzle
+'''
+
 # Module imports
 import pygame
 import random
