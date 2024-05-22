@@ -2,7 +2,7 @@
 https://www.pygame.org/docs/
 https://www.instructables.com/Making-Slide-Puzzle-With-Python/
 https://www.youtube.com/watch?v=DVNxN7Imr2s&list=PLOcNsDskpOqpKhkN6tLId128o0vFWWauV
-https://en.wikipedia.org/wiki/Parity_(physics)
+https://en.wikipedia.org/wiki/Parity_of_a_permutation
 https://puzzling.stackexchange.com/questions/118080/possible-parity-for-sliding-puzzle
 '''
 
@@ -28,13 +28,15 @@ blank = None
 
 # Color variables
 
-black = (0, 0, 0)  # 0 red, blue, and green
+black = (0, 0, 0)
 
-white = (255, 255, 255)  # maximum red, blue, and green
+white = (255, 255, 255)
 
-dark_blue = (3, 54, 73)  # 3 red, 54 green, 73 blue
+dark_blue = (3, 54, 73)
 
-green = (141, 220, 164)  # 0 red/blue, origin0 green
+green = (141, 220, 164)
+
+red = (237, 28, 36)
 
 background_color = dark_blue
 
@@ -51,6 +53,7 @@ class Board:  # creates the class 'Board'
         self.clock = pygame.time.Clock()  # defines an instance variable as a pygame object that can keep track of time
         self.all_sprites = pygame.sprite.Group() # Defines a list of all sprites
         self.board_size = 4 # Defines the length/width of the board as 4x4 by default
+        self.unlock_6x = False
 
     def new(self):  # a method that will create a new board board when called
         # Defines different lists as the list of tiles in their original solved form - this lists will be changed later
@@ -61,11 +64,13 @@ class Board:  # creates the class 'Board'
         self.white_grid = self.create_board()
         # Add the buttons:
         self.buttons_list = []
-        self.buttons_list.append(Button(470, 50, 200, 50, "Shuffle", white, black))
-        self.buttons_list.append(Button(470, 120, 200, 50, "Solve", white, black))
-        self.buttons_list.append(Button(470, 190, 50, 50, "3x", white, black))
-        self.buttons_list.append(Button(545, 190, 50, 50, "4x", white, black))
-        self.buttons_list.append(Button(620, 190, 50, 50, "5x", white, black))
+        self.buttons_list.append(Button(470 + tile_size, 50, 200, 50, "Shuffle", white, black))
+        self.buttons_list.append(Button(470 + tile_size, 120, 200, 50, "Solve", white, black))
+        self.buttons_list.append(Button(470 + tile_size, 190, 50, 50, "3x", white, black))
+        self.buttons_list.append(Button(545 + tile_size, 190, 50, 50, "4x", white, black))
+        self.buttons_list.append(Button(620 + tile_size, 190, 50, 50, "5x", white, black))
+        if self.unlock_6x:
+            self.buttons_list.append(Button(470 + tile_size, 260, 200, 50, "6x6", red, black))
 
         # Shuffle the board so it doesn't start as solved:
         self.shuffle()
@@ -102,7 +107,7 @@ class Board:  # creates the class 'Board'
                         else:
                             self.tiles_grid[row][column], self.tiles_grid[rand_loc_x][rand_loc_y] = self.tiles_grid[rand_loc_x][rand_loc_y], self.tiles_grid[row][column]
 
-                # Check if the shuffled board is solvable
+                # Check if the shuffled board is solvable and not solved
                 if self.is_solvable(self.tiles_grid) and not self.check_win() :
                     break
 
@@ -175,6 +180,11 @@ class Board:  # creates the class 'Board'
         self.draw_grid() # Draws the grid on top of the tiles to ensure it stays on top
         for button in self.buttons_list: # Draws each button to the screen
             button.draw(self.screen)
+
+        if self.check_win() and self.board_size == 5:
+            self.unlock_6x = True
+            self.buttons_list.append(Button(470 + tile_size, 260, 200, 50, "6x6", red, black))
+            self.display_winning_message()
 
         if self.check_win(): # If the player has won, draw the winning screen on top of everything else
             self.display_winning_message()
@@ -263,6 +273,16 @@ class Board:  # creates the class 'Board'
 
                             if button.text == "5x":
                                 self.board_size = 5
+                                self.create_board()
+                                self.new()
+                                self.play()
+                                self.update()
+                                self.draw_tiles()
+                                self.shuffle()
+
+
+                            if button.text == "6x6":
+                                self.board_size = 6
                                 self.create_board()
                                 self.new()
                                 self.play()
